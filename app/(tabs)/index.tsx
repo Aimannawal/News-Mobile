@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import { Image, StyleSheet, View, Text, ActivityIndicator, Modal, TouchableOpacity, Button, TextInput } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -7,6 +7,7 @@ import { ThemedView } from '@/components/ThemedView';
 
 interface Place {
   id: number;
+  name: string;
   photo: string;
   description: string;
 }
@@ -14,6 +15,9 @@ interface Place {
 export default function HomeScreen() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const baseURL = 'https://dewalaravel.com'; // Base URL for the API
 
   useEffect(() => {
@@ -34,6 +38,20 @@ export default function HomeScreen() {
       });
   }, []);
 
+  const openModal = (place: Place) => {
+    setSelectedPlace(place);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedPlace(null);
+  };
+
+  const filteredPlaces = places.filter(place =>
+    place.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -45,28 +63,58 @@ export default function HomeScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome, Abi Arrasyid!</ThemedText>
+        <ThemedText type="title">Welcome Everybody To Mew News!</ThemedText>
         <HelloWave />
       </ThemedView>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Cari Berita"
+        placeholderTextColor={'white'}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <View style={styles.placesContainer}>
-          {places.length > 0 ? (
-            places.map((item) => (
-              <View key={item.id} style={styles.placeContainer}>
-                <Image
-                  source={{ uri: `${baseURL}${item.photo}` }}
-                  style={styles.placeImage}
-                  onError={(error) => console.error('Error loading image:', error.nativeEvent.error)}
-                />
-                <Text style={styles.placeDescription}>{item.description}</Text>
-              </View>
+          {filteredPlaces.length > 0 ? (
+            filteredPlaces.map((item) => (
+              <TouchableOpacity key={item.id} onPress={() => openModal(item)}>
+                <View style={styles.placeContainer}>
+                  <Image
+                    source={{ uri: `${baseURL}${item.photo}` }}
+                    style={styles.placeImage}
+                    onError={(error) => console.error('Error loading image:', error.nativeEvent.error)}
+                  />
+                  <Text style={styles.placeName}>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
             ))
           ) : (
             <Text>No places available.</Text>
           )}
         </View>
+      )}
+      {selectedPlace && (
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={closeModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Image
+                source={{ uri: `${baseURL}${selectedPlace.photo}` }}
+                style={styles.modalImage}
+                onError={(error) => console.error('Error loading image:', error.nativeEvent.error)}
+              />
+              <Text style={styles.modalTitle}>{selectedPlace.name}</Text>
+              <Text style={styles.modalDescription}>{selectedPlace.description}</Text>
+              <Button title="Close" onPress={closeModal} />
+            </View>
+          </View>
+        </Modal>
       )}
     </ParallaxScrollView>
   );
@@ -77,6 +125,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    margin: 16,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    color: 'white',
   },
   placesContainer: {
     paddingHorizontal: 16,
@@ -96,7 +153,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 8,
   },
-  placeDescription: {
+  placeName: {
     marginTop: 8,
     fontSize: 16,
     color: '#333',
@@ -107,5 +164,34 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+  },
+  modalTitle: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  modalDescription: {
+    marginTop: 8,
+    fontSize: 16,
+    color: '#333',
   },
 });
