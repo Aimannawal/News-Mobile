@@ -13,7 +13,7 @@ import {
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useFonts } from '@expo-google-fonts/poppins';
+import { useFonts } from "@expo-google-fonts/poppins";
 
 interface Place {
   id: number;
@@ -34,13 +34,17 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    undefined
+  );
   const [categories, setCategories] = useState<Category[]>([]);
   const baseURL = "https://dewalaravel.com";
 
   const [loaded] = useFonts({
-    PoppinsRegular: require('../../assets/fonts/Poppins-Regular.ttf'),
-    PoppinsBold: require('../../assets/fonts/Poppins-Bold.ttf'),
+    PoppinsRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
+    PoppinsBold: require("../../assets/fonts/Poppins-Bold.ttf"),
+    PoppinsMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
+    PoppinsSemibold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
   });
 
   useEffect(() => {
@@ -95,7 +99,7 @@ export default function HomeScreen() {
   };
 
   const filteredPlaces = places.filter((place) =>
-    (selectedCategory ? place.category.name === selectedCategory : true)
+    selectedCategory ? place.category.name === selectedCategory : true
   );
 
   const getImageSource = (photo: string) => {
@@ -113,6 +117,11 @@ export default function HomeScreen() {
           Find your destination
         </ThemedText>
       </ThemedView>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search your destination"
+        placeholderTextColor={"#31363F"}
+      />
       <TouchableOpacity onPress={openModal}>
         <View style={styles.filterContainer}>
           <Text style={styles.selectedCategory}>
@@ -137,20 +146,12 @@ export default function HomeScreen() {
                 <Text style={styles.categoryText}>{category.name}</Text>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={closeModal}
-            >
+            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search your destination"
-        placeholderTextColor={"#31363F"}
-      />
       {loading ? (
         <ActivityIndicator size="large" color="#008DDA" />
       ) : (
@@ -210,10 +211,10 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   titleText: {
     color: "#008DDA",
-    fontFamily: 'PoppinsBold',
+    fontFamily: "PoppinsBold",
+    fontSize: 22,
   },
   titleContainer: {
-    flexDirection: "row",
     alignItems: "center",
     gap: 8,
     marginTop: 55,
@@ -223,8 +224,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderWidth: 1,
     borderRadius: 24,
-    borderColor: "#008DDA",
     backgroundColor: "#fff",
+    borderColor: "#FFF",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -236,6 +237,7 @@ const styles = StyleSheet.create({
   },
   selectedCategory: {
     color: "#31363F",
+    fontFamily: "PoppinsRegular",
   },
   modalContainer: {
     flex: 1,
@@ -252,9 +254,9 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold",
     marginBottom: 16,
     color: "#333",
+    fontFamily: "PoppinsSemibold",
   },
   categoryItem: {
     paddingVertical: 8,
@@ -263,17 +265,19 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 16,
     color: "#333",
+    fontFamily: "PoppinsRegular",
   },
   closeButton: {
     marginTop: 16,
     paddingVertical: 8,
     paddingHorizontal: 16,
     backgroundColor: "#008DDA",
-    borderRadius: 8,
+    borderRadius: 12,
   },
   closeButtonText: {
     fontSize: 16,
     color: "#FFF",
+    fontFamily: "PoppinsMedium",
   },
   searchInput: {
     height: 49,
@@ -291,6 +295,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 2,
+    fontFamily: "PoppinsRegular",
   },
   placesContainer: {
     paddingHorizontal: 16,
@@ -309,16 +314,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   placeImage: {
-    width: 100,
+    width: 170,
     height: 150,
     borderRadius: 8,
   },
   placeName: {
-    marginTop: 8,
+    marginLeft: 30,
     fontSize: 16,
     color: "#333",
     flexShrink: 1,
-    fontFamily: 'PoppinsRegular',
+    fontFamily: "PoppinsMedium",
   },
   modalImage: {
     width: "100%",
@@ -331,4 +336,3 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 });
-

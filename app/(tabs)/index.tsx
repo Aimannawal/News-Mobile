@@ -10,7 +10,7 @@ import {
   Button,
   TextInput,
 } from "react-native";
-import { useFonts } from '@expo-google-fonts/poppins'; 
+import { useFonts } from "@expo-google-fonts/poppins";
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
@@ -33,8 +33,10 @@ export default function HomeScreen() {
   const baseURL = "https://dewalaravel.com";
 
   const [loaded] = useFonts({
-    PoppinsRegular: require('../../assets/fonts/Poppins-Regular.ttf'),
-    PoppinsBold: require('../../assets/fonts/Poppins-Bold.ttf'),
+    PoppinsRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
+    PoppinsBold: require("../../assets/fonts/Poppins-Bold.ttf"),
+    PoppinsMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
+    PoppinsSemibold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
   });
 
   useEffect(() => {
@@ -74,7 +76,6 @@ export default function HomeScreen() {
     place.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  
   if (!loaded) {
     return <ActivityIndicator size="large" color="#008DDA" />;
   }
@@ -82,9 +83,7 @@ export default function HomeScreen() {
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={styles.titleText}>
-          Explore the World!
-        </ThemedText>
+        <ThemedText style={styles.titleText}>Explore the World!</ThemedText>
       </ThemedView>
       {loading ? (
         <ActivityIndicator size="large" color="#008DDA" />
@@ -145,13 +144,15 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   titleText: {
     color: "#008DDA",
-    fontFamily: 'PoppinsBold',
+    fontFamily: "PoppinsBold",
+    fontSize: 22,
   },
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     marginTop: 55,
+    marginLeft: 17,
   },
   placesContainer: {
     paddingHorizontal: 16,
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   placeContainer: {
     marginBottom: 16,
     padding: 16,
-    backgroundColor: "#F5F7F8",
+    backgroundColor: "#F7F7F7",
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -170,23 +171,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   placeImage: {
-    width: 100,
+    width: 170,
     height: 150,
     borderRadius: 8,
   },
   placeName: {
-    marginTop: 8,
+    marginLeft: 30,
     fontSize: 16,
     color: "#333",
     flexShrink: 1,
-    fontFamily: 'PoppinsRegular',
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+    fontFamily: "PoppinsMedium",
   },
   modalContainer: {
     flex: 1,
@@ -211,12 +205,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
-    fontFamily: 'PoppinsBold',
+    fontFamily: "PoppinsBold",
   },
   modalDescription: {
     marginTop: 8,
     fontSize: 16,
     color: "#333",
-    fontFamily: 'PoppinsRegular',
+    fontFamily: "PoppinsRegular",
   },
 });
