@@ -1,68 +1,166 @@
-import { Image, StyleSheet, Platform } from "react-native";
-
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  Modal,
+  TouchableOpacity,
+  Button,
+  TextInput,
+} from "react-native";
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+interface Place {
+  id: number;
+  name: string;
+  photo: string;
+  description: string;
+}
 
 export default function HomeScreen() {
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const baseURL = "https://dewalaravel.com"; // Base URL for the API
+
+  useEffect(() => {
+    fetch(`${baseURL}/api/places`)
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log("Fetched data:", responseData); // Log the fetched data for debugging
+        if (Array.isArray(responseData.data)) {
+          setPlaces(responseData.data);
+        } else {
+          console.error("Unexpected data format:", responseData);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  const openModal = (place: Place) => {
+    setSelectedPlace(place);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedPlace(null);
+  };
+
+  const filteredPlaces = places.filter((place) =>
+    place.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#2C4E80" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
-    >
+    <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome, Abi Arrasyid!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Alamak</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: "cmd + d", android: "cmd + m" })}
-          </ThemedText>{" "}
-          to open developer tools.
+        <ThemedText type="title" style={styles.tittleText}>
+          Explore the World!
         </ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Omaga</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Woloooo</ThemedText>
-        <ThemedText>
-          When you're ready, run{" "}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      {loading ? (
+        <ActivityIndicator size="large" color="#008DDA" />
+      ) : (
+        <View style={styles.placesContainer}>
+          {filteredPlaces.length > 0 ? (
+            filteredPlaces.map((item) => (
+              <TouchableOpacity key={item.id} onPress={() => openModal(item)}>
+                <View style={styles.placeContainer}>
+                  <Image
+                    source={{ uri: `${baseURL}${item.photo}` }}
+                    style={styles.placeImage}
+                    onError={(error) =>
+                      console.error(
+                        "Error loading image:",
+                        error.nativeEvent.error
+                      )
+                    }
+                  />
+                  <Text style={styles.placeName}>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text style={{ color: "#31363F" }}>No places available.</Text>
+          )}
+        </View>
+      )}
+      {selectedPlace && (
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={closeModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Image
+                source={{ uri: `${baseURL}${selectedPlace.photo}` }}
+                style={styles.modalImage}
+                onError={(error) =>
+                  console.error("Error loading image:", error.nativeEvent.error)
+                }
+              />
+              <Text style={styles.modalTitle}>{selectedPlace.name}</Text>
+              <Text style={styles.modalDescription}>
+                {selectedPlace.description}
+              </Text>
+              <Button title="Close" onPress={closeModal} />
+            </View>
+          </View>
+        </Modal>
+      )}
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  tittleText: {
+    color: "#008DDA",
+  },
+
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    marginTop: 55,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  placesContainer: {
+    paddingHorizontal: 16,
+  },
+  placeContainer: {
+    marginBottom: 16,
+    padding: 16,
+    backgroundColor: "#F5F7F8",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+    elevation: 2,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  placeImage: {
+    width: 100,
+    height: 150,
+    borderRadius: 8,
+  },
+  placeName: {
+    marginTop: 8,
+    fontSize: 16,
+    color: "#333",
+    flexShrink: 1,
   },
   reactLogo: {
     height: 178,
@@ -70,5 +168,34 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: "absolute",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 16,
+    alignItems: "center",
+  },
+  modalImage: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+  },
+  modalTitle: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  modalDescription: {
+    marginTop: 8,
+    fontSize: 16,
+    color: "#333",
   },
 });
