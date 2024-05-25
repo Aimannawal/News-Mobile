@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Modal,
   TouchableOpacity,
+  ScrollView,
   Button,
   TextInput,
 } from "react-native";
@@ -34,6 +35,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
     undefined
   );
@@ -81,12 +83,22 @@ export default function HomeScreen() {
       });
   }, []);
 
-  const openModal = () => {
+  const openModal = (place: Place) => {
+    setSelectedPlace(place);
     setModalVisible(true);
   };
 
   const closeModal = () => {
     setModalVisible(false);
+    setSelectedPlace(null);
+  };
+
+  const openCategoryModal = () => {
+    setCategoryModalVisible(true);
+  };
+
+  const closeCategoryModal = () => {
+    setCategoryModalVisible(false);
   };
 
   const selectCategory = (category: string) => {
@@ -95,7 +107,7 @@ export default function HomeScreen() {
     } else {
       setSelectedCategory(category);
     }
-    setModalVisible(false);
+    closeCategoryModal();
   };
 
   const filteredPlaces = places.filter((place) =>
@@ -110,6 +122,10 @@ export default function HomeScreen() {
     }
   };
 
+  if (!loaded) {
+    return <ActivityIndicator size="large" color="#008DDA" />;
+  }
+
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
@@ -122,7 +138,7 @@ export default function HomeScreen() {
         placeholder="Search your destination"
         placeholderTextColor={"#31363F"}
       />
-      <TouchableOpacity onPress={openModal}>
+      <TouchableOpacity onPress={openCategoryModal}>
         <View style={styles.filterContainer}>
           <Text style={styles.selectedCategory}>
             {selectedCategory ? selectedCategory : "All"}
@@ -131,8 +147,8 @@ export default function HomeScreen() {
       </TouchableOpacity>
       <Modal
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
+        visible={categoryModalVisible}
+        onRequestClose={closeCategoryModal}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -146,7 +162,7 @@ export default function HomeScreen() {
                 <Text style={styles.categoryText}>{category.name}</Text>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+            <TouchableOpacity style={styles.closeButton} onPress={closeCategoryModal}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
@@ -196,9 +212,12 @@ export default function HomeScreen() {
                 }
               />
               <Text style={styles.modalTitle}>{selectedPlace.name}</Text>
-              <Text style={styles.modalDescription}>
-                {selectedPlace.description}
-              </Text>
+              <Text style={styles.categoryText}>Category: {selectedPlace.category.name}</Text>
+              <ScrollView style={styles.descriptionContainer}>
+  <Text style={styles.modalDescription}>
+    {selectedPlace.description}
+  </Text>
+</ScrollView>
               <Button title="Close" onPress={closeModal} />
             </View>
           </View>
@@ -258,9 +277,15 @@ const styles = StyleSheet.create({
     color: "#333",
     fontFamily: "PoppinsSemibold",
   },
+  descriptionContainer: {
+    maxHeight: 200,
+  },
   categoryItem: {
     paddingVertical: 8,
     paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    width: "100%",
   },
   categoryText: {
     fontSize: 16,
