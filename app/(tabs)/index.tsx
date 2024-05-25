@@ -10,10 +10,13 @@ import {
   Button,
   TextInput,
 } from "react-native";
+import { useFonts } from '@expo-google-fonts/poppins'; 
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+
+// Interface Place
 interface Place {
   id: number;
   name: string;
@@ -27,13 +30,23 @@ export default function HomeScreen() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const baseURL = "https://dewalaravel.com"; // Base URL for the API
+  const baseURL = "https://dewalaravel.com";
+
+  const [loaded] = useFonts({
+    PoppinsRegular: require('../../assets/fonts/Poppins-Regular.ttf'),
+    PoppinsBold: require('../../assets/fonts/Poppins-Bold.ttf'),
+  });
 
   useEffect(() => {
     fetch(`${baseURL}/api/places`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((responseData) => {
-        console.log("Fetched data:", responseData); // Log the fetched data for debugging
+        console.log("Fetched data:", responseData);
         if (Array.isArray(responseData.data)) {
           setPlaces(responseData.data);
         } else {
@@ -61,10 +74,15 @@ export default function HomeScreen() {
     place.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  
+  if (!loaded) {
+    return <ActivityIndicator size="large" color="#008DDA" />;
+  }
+
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={styles.tittleText}>
+        <ThemedText type="title" style={styles.titleText}>
           Explore the World!
         </ThemedText>
       </ThemedView>
@@ -77,7 +95,7 @@ export default function HomeScreen() {
               <TouchableOpacity key={item.id} onPress={() => openModal(item)}>
                 <View style={styles.placeContainer}>
                   <Image
-                    source={{ uri: `${baseURL}${item.photo}` }}
+                    source={{ uri: `${item.photo}` }}
                     style={styles.placeImage}
                     onError={(error) =>
                       console.error(
@@ -105,7 +123,7 @@ export default function HomeScreen() {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Image
-                source={{ uri: `${baseURL}${selectedPlace.photo}` }}
+                source={{ uri: `${selectedPlace.photo}` }}
                 style={styles.modalImage}
                 onError={(error) =>
                   console.error("Error loading image:", error.nativeEvent.error)
@@ -125,10 +143,10 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  tittleText: {
+  titleText: {
     color: "#008DDA",
+    fontFamily: 'PoppinsBold',
   },
-
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -161,6 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     flexShrink: 1,
+    fontFamily: 'PoppinsRegular',
   },
   reactLogo: {
     height: 178,
@@ -192,10 +211,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
+    fontFamily: 'PoppinsBold',
   },
   modalDescription: {
     marginTop: 8,
     fontSize: 16,
     color: "#333",
+    fontFamily: 'PoppinsRegular',
   },
 });
