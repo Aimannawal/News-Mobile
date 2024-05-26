@@ -17,8 +17,6 @@ import { ThemedView } from "@/components/ThemedView";
 import { useFonts } from "@expo-google-fonts/poppins";
 import { Ionicons } from "@expo/vector-icons";
 
-
-
 interface Place {
   id: number;
   name: string;
@@ -131,13 +129,21 @@ export default function HomeScreen() {
 
   return (
     <ParallaxScrollView>
-      <ThemedView style={styles.titleContainer}>
-        <Ionicons name="menu-outline" size={24} color="#008DDA" />
-        <ThemedText type="title" style={styles.titleText}>
-          Explore The World!
-        </ThemedText>
-      </ThemedView>
+      <Ionicons
+        style={styles.Icon}
+        name="menu-outline"
+        size={36}
+        color="#008DDA"
+      />
 
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText style={styles.titleText}>Explore The World!</ThemedText>
+      </ThemedView>
+      <Image
+        style={styles.adImage}
+        source={require("@/assets/images/alam.jpg")}
+      ></Image>
+      <ThemedText style={styles.menuText1}>Category</ThemedText>
       <TouchableOpacity onPress={openCategoryModal}>
         <View style={styles.filterContainer}>
           <Text style={styles.selectedCategory}>
@@ -162,12 +168,16 @@ export default function HomeScreen() {
                 <Text style={styles.categoryText}>{category.name}</Text>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity style={styles.closeButton} onPress={closeCategoryModal}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={closeCategoryModal}
+            >
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
+      <ThemedText style={styles.menuText1}>Popular</ThemedText>
       {loading ? (
         <ActivityIndicator size="large" color="#008DDA" />
       ) : (
@@ -212,12 +222,14 @@ export default function HomeScreen() {
                 }
               />
               <Text style={styles.modalTitle}>{selectedPlace.name}</Text>
-              <Text style={styles.categoryText}>Category: {selectedPlace.category.name}</Text>
+              <Text style={styles.categoryText}>
+                Category : {selectedPlace.category.name}
+              </Text>
               <ScrollView style={styles.descriptionContainer}>
-  <Text style={styles.modalDescription}>
-    {selectedPlace.description}
-  </Text>
-</ScrollView>
+                <Text style={styles.modalDescription}>
+                  {selectedPlace.description}
+                </Text>
+              </ScrollView>
 
               <Button title="Close" onPress={closeModal} />
             </View>
@@ -229,17 +241,36 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  
+  adImage: {
+    width: 400,
+    height: 160,
+    borderRadius: 8,
+    marginLeft: 17,
+  },
+  menuText1: {
+    color: "#008DDA",
+    fontFamily: "PoppinsSemibold",
+    fontSize: 20,
+    marginLeft: 17,
+    marginTop: 10,
+  },
+  Icon: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: 8,
+    marginTop: 55,
+    marginLeft: 17,
+  },
   titleText: {
     color: "#008DDA",
     fontFamily: "PoppinsBold",
     fontSize: 22,
   },
   titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
     gap: 8,
-    marginTop: 55,
+    marginTop: 5,
     marginLeft: 17,
   },
   filterContainer: {
@@ -308,7 +339,7 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     maxHeight: 200,
   },
-  
+
   searchInput: {
     height: 49,
     flexDirection: "row",

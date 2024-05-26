@@ -25,7 +25,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
-              color={color}
+              color={"#008DDA"}
             />
           ),
         }}
@@ -37,7 +37,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "search" : "search-outline"}
-              color={color}
+              color={"#008DDA"}
             />
           ),
         }}
