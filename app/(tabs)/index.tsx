@@ -15,6 +15,8 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useFonts } from "@expo-google-fonts/poppins";
+import { Ionicons } from "@expo/vector-icons";
+
 
 
 interface Place {
@@ -130,6 +132,7 @@ export default function HomeScreen() {
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
+        <Ionicons name="menu-outline" size={24} color="#008DDA" />
         <ThemedText type="title" style={styles.titleText}>
           Explore The World!
         </ThemedText>

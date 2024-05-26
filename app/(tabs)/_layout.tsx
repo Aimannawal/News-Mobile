@@ -11,7 +11,10 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: "black", // Warna teks tab aktif
+        tabBarInactiveTintColor: "gray", // Warna teks tab non-aktif
+        tabBarActiveBackgroundColor: "white", // Warna latar belakang tab aktif
+        tabBarInactiveBackgroundColor: "white", // Warna latar belakang tab non-aktif
         headerShown: false,
       }}
     >

@@ -36,10 +36,10 @@ export default function HomeScreen() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [searchValue, setSearchValue] = useState('');
+
   const baseURL = "https://dewalaravel.com";
 
   const [loaded] = useFonts({
@@ -65,11 +65,10 @@ export default function HomeScreen() {
         console.error("Error fetching categories:", error);
       });
 
-    // Fetch places
     fetch(`${baseURL}/api/places`)
       .then((response) => response.json())
       .then((responseData) => {
-        console.log("Fetched data:", responseData); // Log the fetched data for debugging
+        console.log("Fetched data:", responseData); 
         if (Array.isArray(responseData.data)) {
           setPlaces(responseData.data);
         } else {
@@ -101,18 +100,20 @@ export default function HomeScreen() {
     setCategoryModalVisible(false);
   };
 
-  const selectCategory = (category: string) => {
-    if (category === "All") {
-      setSelectedCategory(undefined);
-    } else {
-      setSelectedCategory(category);
-    }
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
     closeCategoryModal();
   };
 
-  const filteredPlaces = places.filter((place) =>
-    selectedCategory ? place.category.name === selectedCategory : true
-  );
+  const handleSearchChange = (text: string) => {
+    setSearchValue(text);
+  };
+
+  const filteredPlaces = places.filter(place => {
+    const nameMatch = place.name.toLowerCase().includes(searchValue.toLowerCase());
+    const categoryMatch = !selectedCategory || place.category.name === selectedCategory || selectedCategory === "All";
+    return nameMatch && categoryMatch;
+  });
 
   const getImageSource = (photo: string) => {
     if (photo.startsWith("http") || photo.startsWith("https")) {
@@ -136,7 +137,8 @@ export default function HomeScreen() {
       <TextInput
         style={styles.searchInput}
         placeholder="Search your destination"
-        placeholderTextColor={"#31363F"}
+        placeholderTextColor="#31363F"
+        onChangeText={handleSearchChange}
       />
       <TouchableOpacity onPress={openCategoryModal}>
         <View style={styles.filterContainer}>
@@ -157,7 +159,7 @@ export default function HomeScreen() {
               <TouchableOpacity
                 key={index}
                 style={styles.categoryItem}
-                onPress={() => selectCategory(category.name)}
+                onPress={() => handleCategoryChange(category.name)}
               >
                 <Text style={styles.categoryText}>{category.name}</Text>
               </TouchableOpacity>
@@ -214,10 +216,10 @@ export default function HomeScreen() {
               <Text style={styles.modalTitle}>{selectedPlace.name}</Text>
               <Text style={styles.categoryText}>Category: {selectedPlace.category.name}</Text>
               <ScrollView style={styles.descriptionContainer}>
-  <Text style={styles.modalDescription}>
-    {selectedPlace.description}
-  </Text>
-</ScrollView>
+                <Text style={styles.modalDescription}>
+                  {selectedPlace.description}
+                </Text>
+              </ScrollView>
               <Button title="Close" onPress={closeModal} />
             </View>
           </View>
@@ -227,16 +229,20 @@ export default function HomeScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
+  
   titleText: {
     color: "#008DDA",
     fontFamily: "PoppinsBold",
     fontSize: 22,
   },
   titleContainer: {
+    flexDirection: "row",
     alignItems: "center",
     gap: 8,
     marginTop: 55,
+    marginLeft: 17,
   },
   filterContainer: {
     marginHorizontal: 16,
@@ -277,9 +283,6 @@ const styles = StyleSheet.create({
     color: "#333",
     fontFamily: "PoppinsSemibold",
   },
-  descriptionContainer: {
-    maxHeight: 200,
-  },
   categoryItem: {
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -304,6 +307,10 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontFamily: "PoppinsMedium",
   },
+  descriptionContainer: {
+    maxHeight: 200,
+  },
+  
   searchInput: {
     height: 49,
     flexDirection: "row",
@@ -361,3 +368,4 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 });
+
