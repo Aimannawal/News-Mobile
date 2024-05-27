@@ -233,7 +233,9 @@ export default function HomeScreen() {
                   {selectedPlace.description}
                 </Text>
               </ScrollView>
-              <Button title="Close" onPress={closeModal} />
+              <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -294,10 +296,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     alignItems: "center",
+    justifyContent: "center",
   },
   modalTitle: {
     fontSize: 18,
-    marginBottom: 16,
+    marginBottom: 5,
     color: "#333",
     fontFamily: "PoppinsSemibold",
   },
@@ -311,7 +314,8 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 16,
     color: "#333",
-    fontFamily: "PoppinsRegular",
+    fontFamily: "PoppinsMedium",
+    marginBottom: 5,
   },
   closeButton: {
     marginTop: 16,
@@ -326,7 +330,7 @@ const styles = StyleSheet.create({
     fontFamily: "PoppinsMedium",
   },
   descriptionContainer: {
-    maxHeight: 200,
+    maxHeight: 230,
   },
 
   searchInput: {
@@ -384,5 +388,6 @@ const styles = StyleSheet.create({
   modalDescription: {
     fontSize: 16,
     color: "#333",
+    textAlign: "justify",
   },
 });
