@@ -9,17 +9,18 @@ import {
   TouchableOpacity,
   ScrollView,
   Button,
-  TextInput,
 } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useFonts } from "@expo-google-fonts/poppins";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from 'expo-router';
 
 interface Place {
   id: number;
   name: string;
+  slug: string;
   photo: string;
   description: string;
   category: {
@@ -37,9 +38,7 @@ export default function HomeScreen() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [categories, setCategories] = useState<Category[]>([]);
   const baseURL = "https://dewalaravel.com";
 
@@ -49,6 +48,16 @@ export default function HomeScreen() {
     PoppinsMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
     PoppinsSemibold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
   });
+
+  const router = useRouter();
+
+  const handlePress = () => {
+    if (selectedPlace && selectedPlace.slug) {
+      const { slug } = selectedPlace;
+      console.log(`Navigating to slug: ${slug}`);
+      router.push(`/place/${slug}`);
+    }
+  };
 
   useEffect(() => {
     fetch(`${baseURL}/api/categories`)
@@ -66,11 +75,10 @@ export default function HomeScreen() {
         console.error("Error fetching categories:", error);
       });
 
-    // Fetch places
     fetch(`${baseURL}/api/places`)
       .then((response) => response.json())
       .then((responseData) => {
-        console.log("Fetched data:", responseData); // Log the fetched data for debugging
+        console.log("Fetched data:", responseData);
         if (Array.isArray(responseData.data)) {
           setPlaces(responseData.data);
         } else {
@@ -142,7 +150,7 @@ export default function HomeScreen() {
       <Image
         style={styles.adImage}
         source={require("@/assets/images/alam.jpg")}
-      ></Image>
+      />
       <ThemedText style={styles.menuText1}>Category</ThemedText>
       <TouchableOpacity onPress={openCategoryModal}>
         <View style={styles.filterContainer}>
@@ -230,9 +238,9 @@ export default function HomeScreen() {
                   {selectedPlace.description}
                 </Text>
               </ScrollView>
-              <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
+
+              <Button title="Close" onPress={closeModal} />
+              <Button title="Detail" onPress={handlePress} />
             </View>
           </View>
         </Modal>
@@ -306,11 +314,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     alignItems: "center",
-    justifyContent: "center",
   },
   modalTitle: {
     fontSize: 18,
-    marginBottom: 5,
+    marginBottom: 16,
     color: "#333",
     fontFamily: "PoppinsSemibold",
   },
@@ -324,8 +331,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 16,
     color: "#333",
-    fontFamily: "PoppinsMedium",
-    marginBottom: 5,
+    fontFamily: "PoppinsRegular",
   },
   closeButton: {
     marginTop: 16,
@@ -340,26 +346,7 @@ const styles = StyleSheet.create({
     fontFamily: "PoppinsMedium",
   },
   descriptionContainer: {
-    maxHeight: 230,
-  },
-
-  searchInput: {
-    height: 49,
-    flexDirection: "row",
-    borderWidth: 1,
-    marginHorizontal: 16,
-    marginBottom: 16,
-    paddingHorizontal: 14,
-    borderRadius: 24,
-    color: "#31363F",
-    borderColor: "#FFF",
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 2,
-    fontFamily: "PoppinsRegular",
+    maxHeight: 200,
   },
   placesContainer: {
     paddingHorizontal: 16,
@@ -398,6 +385,5 @@ const styles = StyleSheet.create({
   modalDescription: {
     fontSize: 16,
     color: "#333",
-    textAlign: "justify",
   },
 });
