@@ -261,7 +261,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    marginTop: 55,
     marginLeft: 17,
   },
   filterContainer: {
@@ -352,7 +351,7 @@ const styles = StyleSheet.create({
     fontFamily: "PoppinsRegular",
   },
   placesContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 2,
   },
   placeContainer: {
     marginBottom: 16,
@@ -368,7 +367,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   placeImage: {
-    width: 170,
+    width: 150,
     height: 150,
     borderRadius: 8,
   },
@@ -388,6 +387,6 @@ const styles = StyleSheet.create({
   modalDescription: {
     fontSize: 16,
     color: "#333",
-    textAlign: "justify",
+    marginTop: 5,
   },
 });

@@ -54,15 +54,17 @@ export default function HomeScreen() {
   const handlePress = () => {
     if (selectedPlace && selectedPlace.slug) {
       const { slug } = selectedPlace;
+      closeModal(); // Close the modal before navigating
       console.log(`Navigating to slug: ${slug}`);
-      router.push(`/place/${slug}`);
+      router.push(`../place/${slug}`);
     }
   };
 
   useEffect(() => {
-    fetch(`${baseURL}/api/categories`)
-      .then((response) => response.json())
-      .then((responseData) => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${baseURL}/api/categories`);
+        const responseData = await response.json();
         console.log("Fetched categories:", responseData);
         if (Array.isArray(responseData.data)) {
           const allCategories = [{ name: "All" }, ...responseData.data];
@@ -70,14 +72,15 @@ export default function HomeScreen() {
         } else {
           console.error("Unexpected data format for categories:", responseData);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching categories:", error);
-      });
+      }
+    };
 
-    fetch(`${baseURL}/api/places`)
-      .then((response) => response.json())
-      .then((responseData) => {
+    const fetchPlaces = async () => {
+      try {
+        const response = await fetch(`${baseURL}/api/places`);
+        const responseData = await response.json();
         console.log("Fetched data:", responseData);
         if (Array.isArray(responseData.data)) {
           setPlaces(responseData.data);
@@ -85,11 +88,14 @@ export default function HomeScreen() {
           console.error("Unexpected data format:", responseData);
         }
         setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchCategories();
+    fetchPlaces();
   }, []);
 
   const openModal = (place: Place) => {
@@ -147,10 +153,17 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText style={styles.titleText}>Explore The World!</ThemedText>
       </ThemedView>
-      <Image
-        style={styles.adImage}
-        source={require("@/assets/images/alam.jpg")}
-      />
+      <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}
+        contentContainerStyle={styles.horizontalScrollContent}>
+        {places.slice(0, 3).map((step, index) => (
+          <Image
+            key={index}
+            source={{ uri: getImageSource(step.photo) }}
+            style={styles.adImage}
+          />
+        ))}
+      </ScrollView>
+      
       <ThemedText style={styles.menuText1}>Category</ThemedText>
       <TouchableOpacity onPress={openCategoryModal}>
         <View style={styles.filterContainer}>
@@ -239,8 +252,12 @@ export default function HomeScreen() {
                 </Text>
               </ScrollView>
 
-              <Button title="Close" onPress={closeModal} />
-              <Button title="Detail" onPress={handlePress} />
+              <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.closeButton2} onPress={handlePress}>
+                <Text style={styles.closeButtonText2}>Detail</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -250,8 +267,14 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  horizontalScrollView: {
+    marginTop: 10,
+  },
+  horizontalScrollContent: {
+    paddingHorizontal: 2,
+  },
   adImage: {
-    width: 400,
+    width: 300,
     height: 160,
     borderRadius: 8,
     marginLeft: 17,
@@ -267,7 +290,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     gap: 8,
-    marginTop: 55,
     marginLeft: 17,
   },
   titleText: {
@@ -317,7 +339,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    marginBottom: 16,
+    marginBottom: 10,
     color: "#333",
     fontFamily: "PoppinsSemibold",
   },
@@ -331,7 +353,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 16,
     color: "#333",
-    fontFamily: "PoppinsRegular",
+    fontFamily: "PoppinsMedium",
   },
   closeButton: {
     marginTop: 16,
@@ -345,11 +367,23 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontFamily: "PoppinsMedium",
   },
+  closeButton2: {
+    marginTop: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#008DDA",
+    borderRadius: 12,
+  },
+  closeButtonText2: {
+    fontSize: 16,
+    color: "#FFF",
+    fontFamily: "PoppinsMedium",
+  },
   descriptionContainer: {
     maxHeight: 200,
   },
   placesContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 2,
   },
   placeContainer: {
     marginBottom: 16,
@@ -365,7 +399,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   placeImage: {
-    width: 170,
+    width: 150,
     height: 150,
     borderRadius: 8,
   },
@@ -385,5 +419,6 @@ const styles = StyleSheet.create({
   modalDescription: {
     fontSize: 16,
     color: "#333",
+    marginTop: 5,
   },
 });
