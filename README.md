@@ -1,6 +1,3 @@
-Berikut README yang disesuaikan untuk sebuah proyek **website portal berita**:  
-
-```markdown
 # Selamat Datang di Portal Berita Anda! 📰
 
 Ini adalah proyek **website portal berita** yang dirancang untuk memberikan informasi terkini, menarik, dan terpercaya kepada pengguna. Proyek ini dibuat dengan [Expo](https://expo.dev) menggunakan [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
@@ -69,5 +66,3 @@ Website ini adalah platform berita digital dengan fitur utama:
 
 Selamat mencoba dan terus berkembang! 🚀
 ```  
-
-Silakan modifikasi jika ada informasi tambahan atau fitur spesifik lainnya. 😊
