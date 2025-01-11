@@ -1,50 +1,73 @@
-# Welcome to your Expo app 👋
+Berikut README yang disesuaikan untuk sebuah proyek **website portal berita**:  
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+```markdown
+# Selamat Datang di Portal Berita Anda! 📰
 
-## Get started
+Ini adalah proyek **website portal berita** yang dirancang untuk memberikan informasi terkini, menarik, dan terpercaya kepada pengguna. Proyek ini dibuat dengan [Expo](https://expo.dev) menggunakan [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-1. Install dependencies
+## Memulai Proyek
+
+Ikuti langkah-langkah di bawah untuk menjalankan proyek di perangkat lokal Anda:
+
+1. **Install Dependencies**
+
+   Pastikan Anda memiliki Node.js terinstal, lalu jalankan perintah berikut:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. **Jalankan Aplikasi**
+
+   Gunakan perintah berikut untuk memulai proyek:
 
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   Dalam output, Anda dapat memilih salah satu opsi untuk membuka aplikasi:
+   - [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
+   - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+   - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+   - [Expo Go](https://expo.dev/go), untuk mencoba pengembangan aplikasi dengan fitur sandbox terbatas.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+3. **Mulai Pengembangan**
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   Edit file di dalam direktori **app** untuk menambahkan atau mengubah fitur portal berita Anda. Proyek ini menggunakan [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
+## Reset Proyek
 
-When you're ready, run:
+Jika ingin memulai ulang dengan proyek kosong, jalankan perintah berikut:
 
 ```bash
 npm run reset-project
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Perintah ini akan memindahkan kode awal ke direktori **app-example** dan membuat direktori kosong **app** untuk pengembangan.
 
-## Learn more
+## Sumber Daya
 
-To learn more about developing your project with Expo, look at the following resources:
+Pelajari lebih lanjut tentang pengembangan aplikasi dengan Expo melalui sumber daya berikut:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [Dokumentasi Expo](https://docs.expo.dev/): Pelajari dasar-dasarnya, atau ikuti panduan lanjutan.
+- [Tutorial Expo](https://docs.expo.dev/tutorial/introduction/): Ikuti tutorial langkah demi langkah untuk membuat aplikasi yang berjalan di Android, iOS, dan web.
 
-## Join the community
+## Komunitas
 
-Join our community of developers creating universal apps.
+Bergabunglah dengan komunitas pengembang yang membuat aplikasi universal.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [Expo di GitHub](https://github.com/expo/expo): Lihat platform open source kami dan berkontribusi.
+- [Komunitas Discord](https://chat.expo.dev): Diskusikan dengan pengguna Expo lainnya dan ajukan pertanyaan.
+
+## Tentang Website
+
+Website ini adalah platform berita digital dengan fitur utama:
+- **Berita Terkini**: Menyajikan berita terbaru dari berbagai kategori.
+- **Kategori Berita**: Pilih berita berdasarkan kategori seperti teknologi, olahraga, bisnis, dan lainnya.
+- **Desain Responsif**: Tampilan yang nyaman di berbagai perangkat.
+- **Pengelolaan Konten Mudah**: Integrasi backend sederhana untuk menambahkan berita baru.
+
+Selamat mencoba dan terus berkembang! 🚀
+```  
+
+Silakan modifikasi jika ada informasi tambahan atau fitur spesifik lainnya. 😊
